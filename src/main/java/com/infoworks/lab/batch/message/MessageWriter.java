@@ -52,6 +52,7 @@ public class MessageWriter implements ExcelItemWriter<Message> {
 
     @Override
     public void afterJobCleanup(JobExecution jobExecution) {
+        progressCounter.set(1);
         try {
             getWriter().close();
         } catch (Exception e) {}

@@ -16,6 +16,11 @@ public class MessageReader implements ItemReader<Message> {
     public Message read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
         System.out.println("SimpleReader " + Thread.currentThread().getName());
         Message msg = new Message().setPayload(String.format("{\"message\":\"%s\"}", counter.getAndIncrement()));
-        return counter.get() >= 10100000 ? null : msg; //Returning null marking the end of reading.
+        if (counter.get() >= 10100000){
+            counter.set(0);
+            return null; //Returning null marking the end of reading.
+        } else {
+            return msg;
+        }
     }
 }
