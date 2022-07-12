@@ -17,6 +17,7 @@ public interface ReportItemWriter<T, S> extends ItemWriter<T>, JobExecutionListe
     String getOutputName();
     String[] getColumnHeaders();
     ContentWriter getWriter();
+    void afterJobCleanup(JobExecution jobExecution);
     default String getSheetName() {return "default";}
     Map<Integer, S> convert(List<? extends T> list);
 
@@ -50,7 +51,7 @@ public interface ReportItemWriter<T, S> extends ItemWriter<T>, JobExecutionListe
         //WRITE Commit:
         if (getWriter() != null) {
             try {
-                getWriter().close();
+                afterJobCleanup(jobExecution);
                 getLog().info("JobExecutionListener Completed!");
             } catch (Exception e) {
                 getLog().log(Level.WARNING, "JobExecutionListener " + e.getMessage());

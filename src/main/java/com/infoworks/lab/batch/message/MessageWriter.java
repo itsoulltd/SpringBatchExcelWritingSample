@@ -4,6 +4,7 @@ import com.infoworks.lab.domain.definition.ExcelItemWriter;
 import com.infoworks.lab.rest.models.Message;
 import com.infoworks.lab.services.definition.ContentWriter;
 import com.infoworks.lab.services.impl.ExcelWritingService;
+import org.springframework.batch.core.JobExecution;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -47,6 +48,14 @@ public class MessageWriter implements ExcelItemWriter<Message> {
             this.writer = createWriter();
         }
         return writer;
+    }
+
+    @Override
+    public void afterJobCleanup(JobExecution jobExecution) {
+        try {
+            getWriter().close();
+        } catch (Exception e) {}
+        this.writer = null;
     }
 
     @Override
