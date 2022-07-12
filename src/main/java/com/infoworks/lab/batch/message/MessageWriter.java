@@ -24,7 +24,6 @@ public class MessageWriter implements ExcelItemWriter<Message> {
         this.exportPath = exportPath;
         this.service = service;
         this.batchSize = batchSize;
-        this.progressCounter = new AtomicInteger(1);
     }
 
     @Override
@@ -45,6 +44,7 @@ public class MessageWriter implements ExcelItemWriter<Message> {
     @Override
     public ContentWriter getWriter() {
         if (writer == null){
+            this.progressCounter = new AtomicInteger(1);
             this.writer = createWriter();
         }
         return writer;
@@ -52,10 +52,10 @@ public class MessageWriter implements ExcelItemWriter<Message> {
 
     @Override
     public void afterJobCleanup(JobExecution jobExecution) {
-        progressCounter.set(1);
         try {
             getWriter().close();
         } catch (Exception e) {}
+        this.progressCounter = null;
         this.writer = null;
     }
 
